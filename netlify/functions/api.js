@@ -8,14 +8,13 @@ export async function handler(event) {
     };
   }
 
-  // 👇 KEEP /api in the path
   const url = `${backendUrl}${event.path}`;
 
   const response = await fetch(url, {
     method: event.httpMethod,
     headers: {
       'Content-Type': 'application/json',
-      ...event.headers,
+      'Accept': 'application/json',
     },
     body: event.body,
   });

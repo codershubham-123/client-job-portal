@@ -1,9 +1,11 @@
-# API proxy
+[functions]
+directory = "netlify/functions"
+
+# API proxy → Netlify Function
 [[redirects]]
 from = "/api/*"
-to = "$BACKEND_URL/:splat"
+to = "/.netlify/functions/api"
 status = 200
-force = true
 
 # Angular SPA fallback
 [[redirects]]

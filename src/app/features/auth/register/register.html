@@ -1,0 +1,85 @@
+<div class="auth-page">
+  <mat-card class="auth-card">
+    <!-- Logo -->
+    <div class="logo">
+      <span>Job<span class="highlight">Portal</span></span>
+    </div>
+
+    <h1 class="title">Create account</h1>
+
+    <form [formGroup]="formData" (ngSubmit)="submit()">
+      <!-- Name -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Name</mat-label>
+        <input matInput type="text" formControlName="name" />
+        <mat-error>
+          @if (formData.controls.name.touched && formData.controls.name.invalid) {
+            Enter your name
+          }
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Email -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        <mat-error>
+          @if (formData.controls.email.touched && formData.controls.email.invalid) {
+            @if (formData.controls.email.hasError('required')) {
+              Enter your email
+            }
+            @if (formData.controls.email.hasError('email')) {
+              Enter a valid email
+            }
+          }
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Password -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+        <mat-error>
+          @if (formData.controls.password.touched && formData.controls.password.invalid) {
+            Enter your password
+          }
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Role -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Account type</mat-label>
+        <mat-select formControlName="role">
+          <mat-option value="USER">Job Seeker</mat-option>
+          <mat-option value="COMPANY">Company</mat-option>
+        </mat-select>
+        <mat-error>
+          @if (formData.controls.role.touched && formData.controls.role.invalid) {
+            Select account type
+          }
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Submit -->
+      <button
+        mat-flat-button
+        color="primary"
+        class="submit-btn"
+        type="submit"
+        [disabled]="formData.invalid"
+      >
+        Create account
+      </button>
+    </form>
+
+    <!-- Divider -->
+    <div class="divider">
+      <span>Already have an account?</span>
+    </div>
+
+    <!-- Login -->
+    <button mat-stroked-button (click)="goToLogin()" type="button">
+      Sign in
+    </button>
+  </mat-card>
+</div>

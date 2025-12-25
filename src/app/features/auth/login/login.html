@@ -1,0 +1,54 @@
+<div class="auth-page">
+  <mat-card class="auth-card">
+    <!-- Logo -->
+    <div class="logo">
+      <span>Job<span class="highlight">Portal</span></span>
+    </div>
+
+    <h1 class="title">Sign in</h1>
+
+    <form [formGroup]="formData" (ngSubmit)="submit()">
+      <!-- Email -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        <mat-error>
+          @if (formData.controls.email.touched && formData.controls.email.invalid) {
+          @if(formData.controls.email.hasError('required')) { Enter your email } @if
+          (formData.controls.email.hasError('email')) { Enter a valid email } }
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Password -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+        <mat-error>
+          @if (formData.controls.password.touched &&
+          formData.controls.password.hasError('required')){ Enter your password }
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Submit -->
+      <button
+        mat-flat-button
+        color="primary"
+        class="submit-btn"
+        type="submit"
+        [disabled]="formData.invalid"
+      >
+        Sign In
+      </button>
+    </form>
+
+    <!-- Divider -->
+    <div class="divider">
+      <span>New to JobPortal?</span>
+    </div>
+
+    <!-- Register -->
+    <button mat-stroked-button (click)="goToRegistration()" type="button">
+      Create your account
+    </button>
+  </mat-card>
+</div>

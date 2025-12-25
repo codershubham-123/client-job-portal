@@ -8,8 +8,8 @@ export async function handler(event) {
     };
   }
 
-  const path = event.path.replace('/api', '');
-  const url = `${backendUrl}${path}`;
+  // 👇 KEEP /api in the path
+  const url = `${backendUrl}${event.path}`;
 
   const response = await fetch(url, {
     method: event.httpMethod,

@@ -1,6 +1,13 @@
 [functions]
 directory = "netlify/functions"
 
+# Root URL → /login (HARD redirect)
+[[redirects]]
+from = "/"
+to = "/login"
+status = 301
+force = true
+
 # API proxy → Netlify Function
 [[redirects]]
 from = "/api/*"

@@ -10,15 +10,19 @@ export async function handler(event) {
 
   const url = `${backendUrl}${event.path}`;
 
-  const response = await fetch(url, {
+  const options = {
     method: event.httpMethod,
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     },
-    body: event.body,
-  });
+  };
 
+  if (event.httpMethod !== 'GET' && event.httpMethod !== 'HEAD') {
+    options.body = event.body;
+  }
+
+  const response = await fetch(url, options);
   const data = await response.text();
 
   return {

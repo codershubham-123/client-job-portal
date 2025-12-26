@@ -21,7 +21,7 @@
   font-weight: 700;
 
   .highlight {
-    color: #f3a847; 
+    color: #f3a847;
   }
 }
 
@@ -36,7 +36,15 @@
   margin-bottom: 12px;
 }
 
+form.loading {
+  pointer-events: none;
+  opacity: 0.85;
+}
 .submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
   width: 100%;
   margin-top: 8px;
   background-color: #f0c14b;
@@ -73,4 +81,3 @@
     right: 0;
   }
 }
-

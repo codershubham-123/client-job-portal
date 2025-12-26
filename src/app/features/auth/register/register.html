@@ -7,15 +7,13 @@
 
     <h1 class="title">Create account</h1>
 
-    <form [formGroup]="formData" (ngSubmit)="submit()">
+    <form [formGroup]="formData" (ngSubmit)="submit()" [class.loading]="loading()">
       <!-- Name -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Name</mat-label>
         <input matInput type="text" formControlName="name" />
         <mat-error>
-          @if (formData.controls.name.touched && formData.controls.name.invalid) {
-            Enter your name
-          }
+          @if (formData.controls.name.touched && formData.controls.name.invalid) { Enter your name }
         </mat-error>
       </mat-form-field>
 
@@ -24,14 +22,9 @@
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" />
         <mat-error>
-          @if (formData.controls.email.touched && formData.controls.email.invalid) {
-            @if (formData.controls.email.hasError('required')) {
-              Enter your email
-            }
-            @if (formData.controls.email.hasError('email')) {
-              Enter a valid email
-            }
-          }
+          @if (formData.controls.email.touched && formData.controls.email.invalid) { @if
+          (formData.controls.email.hasError('required')) { Enter your email } @if
+          (formData.controls.email.hasError('email')) { Enter a valid email } }
         </mat-error>
       </mat-form-field>
 
@@ -40,9 +33,8 @@
         <mat-label>Password</mat-label>
         <input matInput type="password" formControlName="password" />
         <mat-error>
-          @if (formData.controls.password.touched && formData.controls.password.invalid) {
-            Enter your password
-          }
+          @if (formData.controls.password.touched && formData.controls.password.invalid) { Enter
+          your password }
         </mat-error>
       </mat-form-field>
 
@@ -54,9 +46,8 @@
           <mat-option value="COMPANY">Company</mat-option>
         </mat-select>
         <mat-error>
-          @if (formData.controls.role.touched && formData.controls.role.invalid) {
-            Select account type
-          }
+          @if (formData.controls.role.touched && formData.controls.role.invalid) { Select account
+          type }
         </mat-error>
       </mat-form-field>
 
@@ -66,9 +57,11 @@
         color="primary"
         class="submit-btn"
         type="submit"
-        [disabled]="formData.invalid"
+        [disabled]="formData.invalid || loading()"
       >
-        Create account
+        @if (!loading()) { Create account } @else {
+        <mat-progress-spinner diameter="22" mode="indeterminate"> </mat-progress-spinner>
+        }
       </button>
     </form>
 
@@ -78,8 +71,6 @@
     </div>
 
     <!-- Login -->
-    <button mat-stroked-button (click)="goToLogin()" type="button">
-      Sign in
-    </button>
+    <button mat-stroked-button (click)="goToLogin()" type="button">Sign in</button>
   </mat-card>
 </div>

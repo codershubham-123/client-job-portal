@@ -1,0 +1,31 @@
+<mat-card class="job-card">
+  <div class="job-card-content">
+    <!-- Left content -->
+    <div class="job-info">
+      <h3 class="job-title">{{ job.title }}</h3>
+
+      <div class="job-meta">
+        <span class="company">
+          {{ job.company?.name ?? 'Confidential Company' }}
+        </span>
+        <span>•</span>
+        <span>{{ job.location }}</span>
+      </div>
+
+      <p class="job-description">
+        {{ job.description }}
+      </p>
+
+      <p class="job-salary">
+        ₹{{ job.minSalary }} – ₹{{ job.maxSalary }}
+      </p>
+    </div>
+
+    <!-- Right action -->
+    <div class="job-action">
+      <button mat-flat-button color="primary">
+        Apply now
+      </button>
+    </div>
+  </div>
+</mat-card>

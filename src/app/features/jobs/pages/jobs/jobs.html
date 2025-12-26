@@ -1,0 +1,85 @@
+<div class="jobs-page">
+
+  <!-- 🔍 Search Bar -->
+  <mat-card class="search-card">
+    <form class="search-form" (submit)="$event.preventDefault()">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Job title / keyword</mat-label>
+        <input matInput />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Location</mat-label>
+        <input matInput />
+      </mat-form-field>
+
+      <button
+        mat-flat-button
+        color="primary"
+        class="search-btn"
+        type="button">
+        Search
+      </button>
+    </form>
+  </mat-card>
+
+  <!-- 🔳 Main Content -->
+  <div class="content">
+
+    <!-- Filters -->
+    <mat-card class="filters">
+      <h3>Refine by</h3>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Job Type</mat-label>
+        <mat-select>
+          <mat-option value="ALL">All</mat-option>
+          <mat-option value="FULL_TIME">Full Time</mat-option>
+          <mat-option value="PART_TIME">Part Time</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Location</mat-label>
+        <mat-select>
+          <mat-option value="ALL">All locations</mat-option>
+          <mat-option value="REMOTE">Remote</mat-option>
+          <mat-option value="BANGALORE">Bangalore</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card>
+
+    <!-- Job List -->
+    <div class="job-list">
+
+      <!-- 🦴 Skeleton loaders -->
+      @if (loading()) {
+        @for (i of [1,2,3,4,5]; track i) {
+          <div class="job-skeleton">
+            <div class="skeleton-content">
+              <div class="skeleton-text title"></div>
+              <div class="skeleton-text meta"></div>
+              <div class="skeleton-text description"></div>
+              <div class="skeleton-text salary"></div>
+            </div>
+
+            <div class="skeleton-button"></div>
+          </div>
+        }
+      }
+
+      <!-- Empty state -->
+      @if (!loading() && jobs().length === 0) {
+        <p class="empty">No jobs available</p>
+      }
+
+      <!-- Real jobs -->
+      @if (!loading() && jobs().length > 0) {
+        @for (job of jobs(); track job.id) {
+          <app-job-card [job]="job"></app-job-card>
+        }
+      }
+
+    </div>
+  </div>
+</div>

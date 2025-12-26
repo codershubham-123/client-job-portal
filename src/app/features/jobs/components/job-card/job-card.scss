@@ -1,0 +1,46 @@
+.job-card {
+  padding: 16px 20px;
+  border-radius: 10px;
+}
+
+.job-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+.job-info {
+  max-width: 75%;
+}
+
+.job-title {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.job-meta {
+  font-size: 14px;
+  color: #565959;
+  margin-bottom: 8px;
+}
+
+.job-description {
+  font-size: 14px;
+  color: #4b5563;
+  margin-bottom: 10px;
+}
+
+.job-salary {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.job-action button {
+  border-radius: 24px;
+  padding: 6px 22px;
+  white-space: nowrap;
+}

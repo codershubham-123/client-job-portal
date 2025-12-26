@@ -36,3 +36,45 @@ body {
   height: 100%;
 }
 /* You can add global styles to this file, and also import other style files */
+
+/* ================================
+   Custom App Refinements
+   (Safe Material 3 overrides)
+================================ */
+
+/* Page background (Amazon-like) */
+body {
+  background-color: #f7f8fa;
+}
+
+/* Headings refinement */
+h1, h2, h3 {
+  color: #0f1111;
+  font-weight: 600;
+}
+
+/* Muted text (metadata) */
+.text-muted {
+  color: #565959;
+  font-size: 14px;
+}
+
+/* Primary action buttons (Apply / Search) */
+.mat-mdc-unelevated-button.mat-primary {
+  background-color: #007185; 
+  color: #ffffff;
+  border-radius: 20px;
+  height: 40px;
+  font-weight: 500;
+}
+
+/* Secondary buttons */
+.mat-mdc-outlined-button {
+  border-color: #d5d9d9;
+}
+
+/* Cards refinement */
+.mat-mdc-card {
+  border-radius: 8px;
+  border: 1px solid #e3e6e8;
+}

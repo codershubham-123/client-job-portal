@@ -7,7 +7,7 @@
 
     <h1 class="title">Sign in</h1>
 
-    <form [formGroup]="formData" (ngSubmit)="submit()">
+    <form [formGroup]="formData" (ngSubmit)="submit()"  [class.loading]="loading()">
       <!-- Email -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email</mat-label>
@@ -35,9 +35,16 @@
         color="primary"
         class="submit-btn"
         type="submit"
-        [disabled]="formData.invalid"
+        [disabled]="formData.invalid || loading()"
       >
-        Sign In
+         @if (!loading()) {
+      Sign In
+    } @else {
+      <mat-progress-spinner
+        diameter="22"
+        mode="indeterminate">
+      </mat-progress-spinner>
+    }
       </button>
     </form>
 

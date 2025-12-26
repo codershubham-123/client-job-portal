@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, Inject, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -23,18 +23,21 @@ import { Job } from '@features/jobs/models/job.model';
   templateUrl: './jobs.html',
   styleUrl: './jobs.scss',
 })
-export class Jobs implements OnInit{
+export class Jobs implements OnInit {
   private jobApi = inject(JobsApi);
 
   jobs = signal<Job[]>([]);
   loading = signal(true);
 
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+
   ngOnInit() {
-    this.loadJobs();
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadJobs();
+    }
   }
 
   loadJobs(): void {
-
     this.jobApi.getJobs().subscribe({
       next: (res) => {
         this.jobs.set(res);

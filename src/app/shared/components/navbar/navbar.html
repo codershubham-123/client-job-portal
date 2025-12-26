@@ -1,21 +1,25 @@
 @if (!isAuthPage()) {
-  <mat-toolbar color="primary">
-    <span routerLink="/">JobPortal</span>
+  <mat-toolbar class="navbar">
+    <!-- Logo -->
+    <span class="logo" routerLink="/">
+      Job<span class="highlight">Portal</span>
+    </span>
+
     <span class="spacer"></span>
 
     @if (!isLoggedIn()) {
       <button mat-button routerLink="/login">Login</button>
-      <button mat-button routerLink="/register">Register</button>
+      <button mat-stroked-button routerLink="/register">Register</button>
     }
 
     @if (isLoggedIn() && user()?.role === 'USER') {
       <button mat-button routerLink="/jobs">Jobs</button>
-      <button mat-button (click)="logout()">Logout</button>
+      <button mat-stroked-button (click)="logout()">Logout</button>
     }
 
     @if (isLoggedIn() && user()?.role === 'COMPANY') {
       <button mat-button routerLink="/company/dashboard">Dashboard</button>
-      <button mat-button (click)="logout()">Logout</button>
+      <button mat-stroked-button (click)="logout()">Logout</button>
     }
   </mat-toolbar>
 }

@@ -2,13 +2,49 @@
   position: sticky;
   top: 0;
   z-index: 1000;
+
+  height: 64px;
+  padding: 0 32px;
+
+  background-color: #f7f8fa; 
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .logo {
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 700;
   cursor: pointer;
+  letter-spacing: 0.3px;
+  color: #111827;
+
+  display: flex;
+  align-items: center;
+
+  .highlight {
+    color: #f3c24f; 
+  }
 }
 
 .spacer {
   flex: 1;
+}
+
+button {
+  margin-left: 10px;
+  font-weight: 500;
+}
+
+button[mat-button] {
+  color: #111827;
+}
+
+button[mat-stroked-button] {
+  border-radius: 22px;
+  padding: 0 18px;
+  border-color: #f3c24f;
+  color: #111827;
+}
+
+button:hover {
+  background-color: rgba(243, 194, 79, 0.12);
 }

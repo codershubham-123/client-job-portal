@@ -1,3 +1,5 @@
+const FORWARDED_HEADERS = ['accept', 'authorization', 'content-type'];
+
 export async function handler(event) {
   const backendUrl = process.env.BACKEND_URL;
 
@@ -14,13 +16,15 @@ export async function handler(event) {
   const headers = new Headers();
 
   for (const [key, value] of Object.entries(event.headers || {})) {
-    if (value && key.toLowerCase() !== 'host') {
-      headers.set(key, value);
+    const lowerKey = key.toLowerCase();
+
+    if (value && FORWARDED_HEADERS.includes(lowerKey)) {
+      headers.set(lowerKey, value);
     }
   }
 
   if (!headers.has('accept')) {
-    headers.set('Accept', 'application/json');
+    headers.set('accept', 'application/json');
   }
 
   const requestInit = {

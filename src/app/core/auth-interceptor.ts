@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { Auth } from './auth';
 
 const isPublicRoute = (url: string) => {
-  return /\/auth\/(login|signup)$/.test(url) || /\/jobs(?:\?|$)/.test(url);
+  return /\/auth\/(login|signup)$/.test(url);
 };
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {

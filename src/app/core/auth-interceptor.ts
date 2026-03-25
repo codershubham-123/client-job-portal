@@ -2,12 +2,12 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Auth } from './auth';
 
-const isPublicRoute = (url: string) => {
+const isAuthRoute = (url: string) => {
   return /\/auth\/(login|signup)$/.test(url);
 };
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  if (isPublicRoute(req.url)) {
+  if (isAuthRoute(req.url)) {
     return next(req);
   }
 

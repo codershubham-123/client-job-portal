@@ -2,49 +2,61 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-
-  height: 64px;
-  padding: 0 32px;
-
-  background-color: #f7f8fa; 
-  border-bottom: 1px solid #e5e7eb;
+  height: 72px;
+  padding: 0 28px;
+  background: #ffffff;
+  border-bottom: 1px solid #dbe1ea;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .logo {
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 32px;
+  font-weight: 800;
+  color: #0b1736;
   cursor: pointer;
-  letter-spacing: 0.3px;
-  color: #111827;
-
-  display: flex;
-  align-items: center;
+  letter-spacing: -0.8px;
 
   .highlight {
-    color: #f5b21a; 
+    color: #f6a100;
   }
 }
 
-.spacer {
-  flex: 1;
+.main-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+
+  a {
+    text-decoration: none;
+    color: #4a5d7a;
+    font-size: 15px;
+    font-weight: 500;
+  }
 }
 
-button {
-  margin-left: 10px;
-  font-weight: 500;
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-button[mat-button] {
-  color: #111827;
+.login-btn,
+.primary-btn {
+  border-radius: 16px;
+  min-width: 122px;
+  height: 50px;
+  font-size: 16px;
 }
 
-button[mat-stroked-button] {
-  border-radius: 22px;
-  padding: 0 18px;
-  border-color: #f5b21a;
-  color: #111827;
+.login-btn {
+  color: #111b31;
+  border-color: #c8d3e3;
 }
 
-button:hover {
-  background-color: rgba(243, 194, 79, 0.12);
+.primary-btn {
+  background: linear-gradient(90deg, #0b8a82, #04735d);
+  color: #ffffff;
+  box-shadow: 0 6px 14px rgba(7, 126, 112, 0.25);
 }

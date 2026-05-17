@@ -1,25 +1,29 @@
 @if (!isAuthPage()) {
   <mat-toolbar class="navbar">
-    <!-- Logo -->
-    <span class="logo" routerLink="/">
-      Talynq<span class="highlight">Q</span>
-    </span>
+    <span class="logo" routerLink="/">Talyn<span class="highlight">Q</span></span>
 
-    <span class="spacer"></span>
+    <nav class="main-links">
+      <a routerLink="/jobs">Jobs</a>
+      <a href="javascript:void(0)">Companies</a>
+      <a href="javascript:void(0)">Reviews</a>
+      <a href="javascript:void(0)">Saved Jobs</a>
+    </nav>
 
-    @if (!isLoggedIn()) {
-      <button mat-button routerLink="/login">Login</button>
-      <button mat-stroked-button routerLink="/register">Register</button>
-    }
+    <div class="actions">
+      @if (!isLoggedIn()) {
+        <button mat-stroked-button class="login-btn" routerLink="/login">Login</button>
+        <button mat-flat-button class="primary-btn" routerLink="/register">Post Job</button>
+      }
 
-    @if (isLoggedIn() && user()?.role === 'USER') {
-      <button mat-button routerLink="/jobs">Jobs</button>
-      <button mat-stroked-button (click)="logout()">Logout</button>
-    }
+      @if (isLoggedIn() && user()?.role === 'USER') {
+        <button mat-stroked-button class="login-btn" routerLink="/jobs">Jobs</button>
+        <button mat-flat-button class="primary-btn" (click)="logout()">Logout</button>
+      }
 
-    @if (isLoggedIn() && user()?.role === 'COMPANY') {
-      <button mat-button routerLink="/company/dashboard">Dashboard</button>
-      <button mat-stroked-button (click)="logout()">Logout</button>
-    }
+      @if (isLoggedIn() && user()?.role === 'COMPANY') {
+        <button mat-stroked-button class="login-btn" routerLink="/company/dashboard">Dashboard</button>
+        <button mat-flat-button class="primary-btn" (click)="logout()">Logout</button>
+      }
+    </div>
   </mat-toolbar>
 }

@@ -1,6 +1,6 @@
 .job-card {
-  padding: 22px;
-  border-radius: 20px;
+  padding: 18px;
+  border-radius: 18px;
   border: 1px solid #dce2ec;
   box-shadow: none;
 }
@@ -12,12 +12,12 @@
 }
 
 .company-mark {
-  width: 78px;
-  height: 78px;
-  border-radius: 20px;
+  width: 68px;
+  height: 68px;
+  border-radius: 16px;
   background: #eff3f8;
   color: #087872;
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 700;
   display: grid;
   place-items: center;
@@ -30,7 +30,7 @@
 
 .job-title {
   margin: 0 0 8px;
-  font-size: 20px;
+  font-size: 18px;
   color: #07183a;
 }
 
@@ -48,7 +48,7 @@
   display: flex;
   gap: 10px;
   color: #51617d;
-  font-size: 15px;
+  font-size: 14px;
   margin-bottom: 8px;
   flex-wrap: wrap;
 }
@@ -56,12 +56,14 @@
 .job-description {
   margin: 0 0 8px;
   color: #455a78;
+  font-size: 14px;
 }
 
 .job-salary {
   margin: 0;
   font-weight: 700;
   color: #0e1c3b;
+  font-size: 15px;
 }
 
 .job-action {

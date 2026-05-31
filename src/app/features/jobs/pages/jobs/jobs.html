@@ -25,9 +25,7 @@
 
       <section>
         <h4>Job Type</h4>
-        <div class="pill-row">
-          <span>Remote</span><span>Hybrid</span><span>Onsite</span>
-        </div>
+        <div class="pill-row"><span>Remote</span><span>Hybrid</span><span>Onsite</span></div>
       </section>
 
       <section>
@@ -53,7 +51,7 @@
     <section class="main-content">
       <div class="section-header">
         <h2>Top Rated Companies</h2>
-        <a href="javascript:void(0)">View all</a>
+        <a routerLink="/jobs/all">View all</a>
       </div>
 
       <div class="company-cards">
@@ -74,7 +72,7 @@
 
       <div class="job-list">
         @if (loading()) {
-          @for (i of [1,2,3,4]; track i) {
+          @for (i of [1, 2, 3, 4]; track i) {
             <div class="job-skeleton">
               <div class="skeleton-content">
                 <div class="skeleton-text title"></div>

@@ -9,7 +9,7 @@
       <div class="job-meta">
         <span>{{ job.company?.name ?? 'Confidential Company' }}</span>
         <span>•</span>
-        <span>{{ job.location }}</span>
+        <span>{{ job.location ?? 'Location not specified' }}</span>
       </div>
 
       <p class="job-description">{{ job.description }}</p>

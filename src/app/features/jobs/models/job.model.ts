@@ -18,6 +18,6 @@ export interface Job {
   description: string;
   minSalary: string;
   maxSalary: string;
-  location: string;
+  location: string | null;
   company: Company | null;
 }

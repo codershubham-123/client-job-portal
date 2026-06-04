@@ -373,8 +373,8 @@
 
 .job-heading {
   display: flex;
-  gap: 10px;
   align-items: center;
+  gap: 10px;
 
   h2 {
     margin: 0;
@@ -388,8 +388,8 @@
     padding: 5px 11px;
     background: #d7f7f4;
     color: #00786f;
-    font-weight: 800;
     font-size: 12px;
+    font-weight: 800;
   }
 }
 
@@ -449,6 +449,38 @@
 .skill-tags {
   display: flex;
   flex-wrap: wrap;
+}
+
+.company-line {
+  align-items: center;
+}
+
+.job-facts {
+  gap: 8px;
+  margin-top: 10px;
+
+  > span {
+    display: inline-grid;
+    gap: 2px;
+    min-width: 112px;
+    border-radius: 12px;
+    background: #f4f8fb;
+    color: #172744;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  small {
+    color: #738097;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+}
+
+.skill-tags {
   gap: 8px;
   margin-top: 12px;
 

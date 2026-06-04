@@ -109,7 +109,7 @@
           <span class="count-dot"></span>
           <div>
             <strong>{{ visibleJobs().length }} jobs found</strong>
-            <small>Showing the best matches first</small>
+            <small>Handpicked openings matching your filters</small>
           </div>
         </div>
         <div class="pager">
@@ -149,11 +149,12 @@
                   <span>New</span>
                 </div>
                 <p class="meta company-line">
+                  <span class="meta-icon">🏢</span>
                   {{ getCompanyName(job) }} <span class="divider">•</span> {{ getJobLocation(job) }}
                 </p>
                 <div class="job-facts" aria-label="Job highlights">
-                  <span><small>Experience</small>{{ getExperience(job) }}</span>
-                  <span><small>Salary</small>{{ getSalary(job) }}</span>
+                  <span><span class="fact-icon">↗</span>{{ getExperience(job) }}</span>
+                  <span><span class="fact-icon">₹</span>{{ getSalary(job) }}</span>
                 </div>
                 <div class="skill-tags">
                   @for (skill of getSkills(job); track skill) {

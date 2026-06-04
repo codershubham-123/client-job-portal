@@ -105,11 +105,17 @@
 
     <main class="results-card">
       <div class="results-header">
-        <strong>{{ visibleJobs().length }} jobs found</strong>
-        <div>
+        <div class="results-count">
+          <span class="count-dot"></span>
+          <div>
+            <strong>{{ visibleJobs().length }} jobs found</strong>
+            <small>Showing the best matches first</small>
+          </div>
+        </div>
+        <div class="pager">
           <span>Page 1 of 1</span>
-          <button type="button" disabled>‹</button>
-          <button type="button" disabled>›</button>
+          <button type="button" disabled aria-label="Previous page">‹</button>
+          <button type="button" disabled aria-label="Next page">›</button>
         </div>
       </div>
 
@@ -136,16 +142,19 @@
               (keydown.enter)="selectJob(job)"
               tabindex="0"
             >
-              <div class="company-logo">{{ getCompanyInitial(job) }}</div>
+              <div class="company-logo" aria-hidden="true">{{ getCompanyInitial(job) }}</div>
               <div class="job-summary">
                 <div class="job-heading">
                   <h2>{{ job.title }}</h2>
                   <span>New</span>
                 </div>
-                <p class="meta">
-                  {{ getCompanyName(job) }} <span>•</span> {{ getJobLocation(job) }}
+                <p class="meta company-line">
+                  {{ getCompanyName(job) }} <span class="divider">•</span> {{ getJobLocation(job) }}
                 </p>
-                <p class="meta">▣ {{ getExperience(job) }} <span>•</span> ◉ {{ getSalary(job) }}</p>
+                <div class="job-facts" aria-label="Job highlights">
+                  <span><small>Experience</small>{{ getExperience(job) }}</span>
+                  <span><small>Salary</small>{{ getSalary(job) }}</span>
+                </div>
                 <div class="skill-tags">
                   @for (skill of getSkills(job); track skill) {
                     <span>{{ skill }}</span>
@@ -155,6 +164,7 @@
               <div class="row-side">
                 <button type="button" aria-label="Save job">♡</button>
                 <small>{{ getPostedLabel(job) }}</small>
+                <span class="details-link">View details →</span>
               </div>
             </article>
           }

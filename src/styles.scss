@@ -1,4 +1,3 @@
-
 // Include theming for Angular Material with `mat.theme()`.
 // This Sass mixin will define CSS variables that are used for styling Angular Material
 // components according to the Material 3 design spec.
@@ -8,14 +7,16 @@
 
 html {
   height: 100%;
-  @include mat.theme((
-    color: (
-      primary: mat.$cyan-palette,
-      tertiary: mat.$orange-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$cyan-palette,
+        tertiary: mat.$orange-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
 }
 
 body {
@@ -48,7 +49,9 @@ body {
 }
 
 /* Headings refinement */
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   color: #0f1111;
   font-weight: 600;
 }
@@ -61,7 +64,7 @@ h1, h2, h3 {
 
 /* Primary action buttons (Apply / Search) */
 .mat-mdc-unelevated-button.mat-primary {
-  background-color: #007185; 
+  background-color: #007185;
   color: #ffffff;
   border-radius: 20px;
   height: 40px;
@@ -77,4 +80,84 @@ h1, h2, h3 {
 .mat-mdc-card {
   border-radius: 8px;
   border: 1px solid #e3e6e8;
+}
+
+/* All jobs results refinements */
+.all-jobs-page {
+  .results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
+    padding: 14px 16px;
+    border: 1px solid #e3edf7;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f8fbff, #effbf9);
+    color: #162541;
+  }
+
+  .results-count,
+  .pager {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .results-count strong,
+  .results-count small {
+    display: block;
+  }
+
+  .results-count strong {
+    font-size: 16px;
+    letter-spacing: -0.01em;
+  }
+
+  .results-count small {
+    margin-top: 3px;
+    color: #63718a;
+    font-size: 12px;
+  }
+
+  .count-dot {
+    width: 36px;
+    height: 36px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 12px;
+    background: #dff8f5;
+  }
+
+  .count-dot::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #0b8c83;
+    box-shadow: 0 0 0 6px rgba(11, 140, 131, 0.12);
+  }
+
+  .pager span {
+    color: #34445f;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .pager button {
+    width: 34px;
+    height: 34px;
+    border: 1px solid #dbe3ee;
+    border-radius: 10px;
+    background: #fff;
+    color: #98a4b7;
+    font-size: 18px;
+  }
+
+  .details-link {
+    color: #087d73;
+    font-size: 12px;
+    font-weight: 800;
+  }
 }

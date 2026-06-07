@@ -32,9 +32,9 @@ export class Jobs implements OnInit {
   loading = signal(true);
   quickFilters = ['Remote', 'Frontend', 'React', 'Java', 'AI/ML', 'Startup'];
   topCompanies = [
-    { initial: 'G', name: 'Google', rating: '4.9', jobs: 24 },
-    { initial: 'M', name: 'Microsoft', rating: '4.8', jobs: 18 },
-    { initial: 'N', name: 'Netflix', rating: '4.7', jobs: 11 },
+    { initial: 'G', name: 'Google', rating: '4.8', jobs: 25 },
+    { initial: 'M', name: 'Microsoft', rating: '4.7', jobs: 19 },
+    { initial: 'A', name: 'Amazon', rating: '4.6', jobs: 12 },
   ];
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}

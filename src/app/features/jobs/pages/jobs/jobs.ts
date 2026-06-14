@@ -35,6 +35,7 @@ export class Jobs implements OnInit {
     { initial: 'G', name: 'Google', rating: '4.8', jobs: 25 },
     { initial: 'M', name: 'Microsoft', rating: '4.7', jobs: 19 },
     { initial: 'A', name: 'Amazon', rating: '4.6', jobs: 12 },
+    { initial: 'A', name: 'Facebook', rating: '4.3', jobs: 2 }
   ];
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}

@@ -47,8 +47,8 @@ export class Jobs implements OnInit {
 
   loadJobs(): void {
     this.jobApi.getJobs().subscribe({
-      next: (res) => {
-        this.jobs.set(res);
+      next: (res : any) => {
+        this.jobs.set(res.data);
         this.loading.set(false);
       },
       error: (err) => {

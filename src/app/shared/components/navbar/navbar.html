@@ -3,10 +3,15 @@
     <span class="logo" routerLink="/">Talyn<span class="highlight">Q</span></span>
 
     <nav class="main-links">
-      <a routerLink="/jobs">Jobs</a>
-      <a href="javascript:void(0)">Companies</a>
-      <a href="javascript:void(0)">Reviews</a>
-      <a href="javascript:void(0)">Saved Jobs</a>
+      <a
+        routerLink="/jobs"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Jobs</a
+      >
+      <a routerLink="/companies" routerLinkActive="active-link">Companies</a>
+      <a routerLink="/reviews" routerLinkActive="active-link">Reviews</a>
+      <a routerLink="/saved-jobs" routerLinkActive="active-link">Saved Jobs</a>
     </nav>
 
     <div class="actions">
@@ -21,7 +26,9 @@
       }
 
       @if (isLoggedIn() && user()?.role === 'COMPANY') {
-        <button mat-stroked-button class="login-btn" routerLink="/company/dashboard">Dashboard</button>
+        <button mat-stroked-button class="login-btn" routerLink="/company/dashboard">
+          Dashboard
+        </button>
         <button mat-flat-button class="primary-btn" (click)="logout()">Logout</button>
       }
     </div>

@@ -7,6 +7,7 @@ import { Jobs } from './jobs';
 
 const jobsApiStub = {
   getJobs: () => of([]),
+  getCompanies: () => of([]),
 };
 
 describe('Jobs', () => {

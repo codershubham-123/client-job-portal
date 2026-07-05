@@ -1,0 +1,39 @@
+<div class="directory-page">
+  <section class="directory-hero">
+    <div><p>Companies</p><h1>Explore hiring companies</h1><span>{{ companies().length }} companies from the backend</span></div>
+    <label><span>⌕</span><input type="search" [ngModel]="searchTerm()" (ngModelChange)="updateSearch($event)" placeholder="Search by company, industry, or location" /></label>
+  </section>
+
+  <section class="top-strip">
+    <h2>Top Rated Companies</h2>
+    <div class="top-grid">
+      @for (company of topRatedCompanies(); track company.id) {
+        <article (click)="selectCompany(company)" tabindex="0" (keydown.enter)="selectCompany(company)">
+          <div class="logo">{{ company.initial }}</div><strong>{{ company.name }}</strong><small>⭐ {{ company.rating }} • {{ company.openJobCount }} open jobs</small>
+        </article>
+      }
+    </div>
+  </section>
+
+  <div class="split-layout">
+    <main class="card-list">
+      @if (loading()) { <p class="state">Loading companies...</p> }
+      @if (error()) { <p class="state error">{{ error() }}</p> }
+      @if (!loading() && filteredCompanies().length === 0) { <p class="state">No companies found.</p> }
+      @for (company of filteredCompanies(); track company.id) {
+        <article class="entity-card" [class.active]="selectedCompany()?.id === company.id" (click)="selectCompany(company)" tabindex="0" (keydown.enter)="selectCompany(company)">
+          <div class="logo">{{ company.initial }}</div>
+          <div><h3>{{ company.name }}</h3><p>{{ company.industry }} • {{ company.location }}</p><small>⭐ {{ company.rating }} • {{ company.reviewCount }} reviews • {{ company.openJobCount }} open jobs</small></div>
+        </article>
+      }
+    </main>
+
+    <aside class="detail-sidebar">
+      @if (selectedCompany(); as company) {
+        <div class="detail-head"><div class="logo large">{{ company.initial }}</div><div><h2>{{ company.name }}</h2><p>{{ company.industry }} • {{ company.location }}</p></div></div>
+        <div class="metrics"><span>⭐ {{ company.rating }}</span><span>{{ company.reviewCount }} Reviews</span><span>{{ company.openJobCount }} Jobs</span></div>
+        <section><h3>About</h3><p>{{ company.description }}</p></section>
+      } @else { <p class="state">Select a company to view details.</p> }
+    </aside>
+  </div>
+</div>

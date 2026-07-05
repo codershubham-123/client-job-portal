@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { JobsApi } from '@core/jobs-api';
 import { Job } from '@features/jobs/models/job.model';
+import { companyInitial, experienceDisplay, salaryDisplay } from '@features/jobs/utils/display';
 
 type JobTypeFilter = 'Remote' | 'Hybrid' | 'Onsite';
 
@@ -27,7 +28,7 @@ export class AllJobs implements OnInit {
   selectedJob = signal<Job | null>(null);
   searchTerm = signal('');
   sortBy = signal('newest');
-  selectedTypes = signal<Set<JobTypeFilter>>(new Set(['Remote']));
+  selectedTypes = signal<Set<JobTypeFilter>>(new Set());
   quickFilters = ['Remote', 'Frontend', 'React', 'Java', 'AI/ML', 'Startup'];
 
   jobTypeFilters = computed<FilterItem[]>(() => {
@@ -40,7 +41,7 @@ export class AllJobs implements OnInit {
         count: this.countByLocation(jobs, 'Remote'),
         selected: selected.has('Remote'),
       },
-      { label: 'Hybrid', count: 76, selected: selected.has('Hybrid') },
+      { label: 'Hybrid', count: this.countByType(jobs, 'Hybrid'), selected: selected.has('Hybrid') },
       { label: 'Onsite', count: this.countOnsite(jobs), selected: selected.has('Onsite') },
     ];
   });
@@ -99,8 +100,8 @@ export class AllJobs implements OnInit {
 
   loadJobs(): void {
     this.jobApi.getJobs().subscribe({
-      next: (res : any) => {
-        this.jobs.set(res.data);
+      next: (res) => {
+        this.jobs.set(res);
         this.selectedJob.set(res[0] ?? null);
         this.loading.set(false);
       },
@@ -154,61 +155,37 @@ export class AllJobs implements OnInit {
   }
 
   getCompanyInitial(job: Job): string {
-    return this.getCompanyName(job).charAt(0).toUpperCase();
+    return companyInitial(job.company);
   }
 
   getJobLocation(job: Job): string {
-    return job.location ?? 'Location not specified';
+    return job.location;
   }
 
   getSalary(job: Job): string {
-    return `₹${job.minSalary} - ₹${job.maxSalary}`;
+    return salaryDisplay(job);
   }
 
   getExperience(job: Job): string {
-    const title = job.title.toLowerCase();
-
-    if (title.includes('senior') || job.id <= 2) {
-      return '5+ Years';
-    }
-
-    if (title.includes('frontend')) {
-      return '2-4 Years';
-    }
-
-    return '3-5 Years';
+    return experienceDisplay(job);
   }
 
   getSkills(job: Job): string[] {
-    const text = `${job.title} ${job.description}`.toLowerCase();
-
-    if (text.includes('frontend') || text.includes('react')) {
-      return ['React', 'TypeScript', 'Next.js', 'Tailwind CSS'];
-    }
-
-    if (text.includes('java') || text.includes('backend') || text.includes('spring')) {
-      return ['Java', 'Spring Boot', 'AWS', 'MySQL'];
-    }
-
-    if (text.includes('cloud') || text.includes('azure')) {
-      return ['Azure', 'Kubernetes', 'CI/CD', 'Terraform'];
-    }
-
-    if (text.includes('devops')) {
-      return ['Docker', 'Jenkins', 'CI/CD', 'Automation'];
-    }
-
-    return ['Python', 'Django', 'PostgreSQL', 'Docker'];
+    return job.skills ?? [];
   }
 
   getPostedLabel(job: Job): string {
-    return `${Math.max(1, job.id % 5)} day${job.id % 5 === 1 ? '' : 's'} ago`;
+    return job.postedAt;
   }
 
   private countByLocation(jobs: Job[], locationName: string): number {
     return jobs.filter((job) =>
       this.getJobLocation(job).toLowerCase().includes(locationName.toLowerCase()),
     ).length;
+  }
+
+  private countByType(jobs: Job[], type: string): number {
+    return jobs.filter((job) => job.jobType?.toLowerCase() === type.toLowerCase()).length;
   }
 
   private countOnsite(jobs: Job[]): number {

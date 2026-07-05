@@ -30,21 +30,12 @@
 
       <section>
         <h4>Experience</h4>
-        <ul>
-          <li>Fresher</li>
-          <li>1-3 Years</li>
-          <li>3-5 Years</li>
-          <li>Senior Level</li>
-        </ul>
+        <p>Experience values are loaded from backend job records.</p>
       </section>
 
       <section>
         <h4>Salary</h4>
-        <ul>
-          <li>₹5L - ₹10L</li>
-          <li>₹10L - ₹20L</li>
-          <li>₹20L+</li>
-        </ul>
+        <p>Salary is displayed directly from backend responses.</p>
       </section>
     </aside>
 
@@ -55,12 +46,12 @@
       </div>
 
       <div class="company-cards">
-        @for (company of topCompanies; track company.name) {
+        @for (company of topCompanies(); track company.id) {
           <article class="company-card">
             <div class="logo-tile">{{ company.initial }}</div>
             <h3>{{ company.name }}</h3>
-            <p>⭐ {{ company.rating }} &nbsp;•&nbsp; {{ company.jobs }} open jobs</p>
-            <button type="button">View Company</button>
+            <p>⭐ {{ company.rating }} &nbsp;•&nbsp; {{ company.openJobCount }} open jobs</p>
+            <button type="button" routerLink="/companies">View Company</button>
           </article>
         }
       </div>

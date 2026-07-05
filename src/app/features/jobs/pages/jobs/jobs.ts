@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { JobsApi } from '@core/jobs-api';
 import { JobCard } from '@features/jobs/components/job-card/job-card';
-import { Job } from '@features/jobs/models/job.model';
+import { Company, Job } from '@features/jobs/models/job.model';
 
 @Component({
   selector: 'app-jobs',
@@ -29,26 +29,23 @@ export class Jobs implements OnInit {
   private jobApi = inject(JobsApi);
 
   jobs = signal<Job[]>([]);
+  topCompanies = signal<Company[]>([]);
   loading = signal(true);
   quickFilters = ['Remote', 'Frontend', 'React', 'Java', 'AI/ML', 'Startup'];
-  topCompanies = [
-    { initial: 'G', name: 'Google', rating: '4.8', jobs: 25 },
-    { initial: 'M', name: 'Microsoft', rating: '4.7', jobs: 19 },
-    { initial: 'A', name: 'Amazon', rating: '4.6', jobs: 12 }
-  ];
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.loadJobs();
+      this.loadCompanies();
     }
   }
 
   loadJobs(): void {
     this.jobApi.getJobs().subscribe({
-      next: (res : any) => {
-        this.jobs.set(res.data);
+      next: (res) => {
+        this.jobs.set(res);
         this.loading.set(false);
       },
       error: (err) => {
@@ -57,4 +54,12 @@ export class Jobs implements OnInit {
       },
     });
   }
+
+  loadCompanies(): void {
+    this.jobApi.getCompanies().subscribe({
+      next: (companies) => this.topCompanies.set([...companies].sort((a, b) => b.rating - a.rating).slice(0, 3)),
+      error: (err) => console.error('Failed to load companies', err),
+    });
+  }
 }
+

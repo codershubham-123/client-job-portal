@@ -202,3 +202,33 @@ section {
     position: static;
   }
 }
+
+@media (max-width: 620px) {
+  .directory-page {
+    padding: 14px;
+  }
+
+  .directory-hero {
+    padding: 24px 18px;
+    border-radius: 18px;
+
+    h1 {
+      font-size: 30px;
+    }
+  }
+
+  .top-strip,
+  .card-list,
+  .detail-sidebar {
+    border-radius: 16px;
+  }
+
+  .entity-card,
+  .detail-head {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+}

@@ -368,3 +368,49 @@
     color: #6f7f95;
   }
 }
+
+@media (max-width: 520px) {
+  .jobs-page {
+    padding: 12px;
+  }
+
+  .hero {
+    padding: 24px 16px;
+    border-radius: 18px;
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  .search-form {
+    border-radius: 16px;
+
+    input,
+    button {
+      height: 52px;
+      font-size: 15px;
+    }
+  }
+
+  .filters-panel,
+  .company-card,
+  .job-skeleton {
+    border-radius: 18px;
+    padding: 18px;
+  }
+
+  .company-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+}

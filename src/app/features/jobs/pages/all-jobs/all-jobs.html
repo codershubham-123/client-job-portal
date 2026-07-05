@@ -57,13 +57,34 @@
       </section>
 
       <section class="filter-section">
-        <h3>Experience</h3>
-        <p class="filter-note">Experience is displayed from each backend job record.</p>
+        <h3>Experience <span>⌄</span></h3>
+        @for (filter of experienceFilters(); track filter.label) {
+          <label class="check-row">
+            <input
+              type="checkbox"
+              [checked]="filter.selected"
+              (change)="toggleExperience(filter.label)"
+            />
+            <span>{{ filter.label }}</span>
+            <small>{{ filter.count }}</small>
+          </label>
+        }
       </section>
 
       <section class="filter-section">
         <h3>Salary Range</h3>
-        <p class="filter-note">Salary is displayed exactly as returned by the backend.</p>
+        @for (filter of salaryFilters(); track filter.label) {
+          <label class="radio-row">
+            <input
+              name="salary"
+              type="radio"
+              [checked]="filter.selected"
+              (click)="updateSalary(filter.label)"
+            />
+            <span>{{ filter.label }}</span>
+            <small>{{ filter.count }}</small>
+          </label>
+        }
       </section>
 
       <section class="filter-section skills-filter">

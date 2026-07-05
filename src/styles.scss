@@ -13,7 +13,7 @@ html {
       primary: mat.$cyan-palette,
       tertiary: mat.$orange-palette,
     ),
-    typography: 'Inter',
+    typography: Roboto,
     density: 0,
   ));
 }
@@ -79,5 +79,6 @@ h1, h2, h3 {
   border: 1px solid #e3e6e8;
 }
 
-* { box-sizing: border-box; letter-spacing: 0; }
-body, button, input, select, textarea { font-family: 'Inter', Arial, sans-serif; letter-spacing: 0; }
+* {
+  box-sizing: border-box;
+}

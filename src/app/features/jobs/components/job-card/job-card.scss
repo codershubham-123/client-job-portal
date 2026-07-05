@@ -68,7 +68,14 @@
 
 .job-action {
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   gap: 10px;
+
+  small {
+    color: #526178;
+    font-weight: 700;
+  }
 
   button {
     border-radius: 14px;
@@ -77,6 +84,25 @@
   }
 }
 
-.title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.skill-tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; span { border-radius: 999px; background: #e6f5f4; color: #065b63; padding: 5px 10px; font-size: 12px; font-weight: 600; } }
-.job-action { flex-direction: column; align-items: flex-end; small { color: #526178; font-weight: 700; } }
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.skill-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 8px 0;
+
+  span {
+    border-radius: 999px;
+    background: #e6f5f4;
+    color: #065b63;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+}

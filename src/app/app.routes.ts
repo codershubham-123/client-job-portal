@@ -31,6 +31,13 @@ export const routes: Routes = [
     loadComponent: () => import('./features/reviews/pages/reviews/reviews').then((m) => m.Reviews),
   },
   {
+    path: 'company/dashboard',
+    loadComponent: () =>
+      import('./features/company-dashboard/pages/dashboard/dashboard').then(
+        (m) => m.CompanyDashboard,
+      ),
+  },
+  {
     path: '**',
     redirectTo: 'login',
   },

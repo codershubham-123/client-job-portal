@@ -25,17 +25,52 @@
 
       <section>
         <h4>Job Type</h4>
-        <div class="pill-row"><span>Remote</span><span>Hybrid</span><span>Onsite</span></div>
+        <div class="pill-row">
+          @for (type of jobTypeFilters; track type) {
+            <button
+              type="button"
+              [class.active]="isTypeSelected(type)"
+              (click)="toggleType(type)"
+            >
+              {{ type }}
+              <small>{{ countByType(type) }}</small>
+            </button>
+          }
+        </div>
       </section>
 
       <section>
         <h4>Experience</h4>
-        <p>Experience values are loaded from backend job records.</p>
+        <div class="filter-list">
+          @for (experience of experienceFilters; track experience) {
+            <label>
+              <input
+                type="checkbox"
+                [checked]="isExperienceSelected(experience)"
+                (change)="toggleExperience(experience)"
+              />
+              <span>{{ experience }}</span>
+              <small>{{ countByExperience(experience) }}</small>
+            </label>
+          }
+        </div>
       </section>
 
       <section>
         <h4>Salary</h4>
-        <p>Salary is displayed directly from backend responses.</p>
+        <div class="filter-list">
+          @for (salary of salaryFilters; track salary) {
+            <label>
+              <input
+                type="checkbox"
+                [checked]="isSalarySelected(salary)"
+                (change)="toggleSalary(salary)"
+              />
+              <span>{{ salary }}</span>
+              <small>{{ countBySalary(salary) }}</small>
+            </label>
+          }
+        </div>
       </section>
     </aside>
 
@@ -58,7 +93,7 @@
 
       <div class="section-header jobs-header">
         <h2>Featured Jobs</h2>
-        <p>{{ jobs().length > 0 ? jobs().length + ' jobs found' : '0 jobs found' }}</p>
+        <p>{{ filteredJobs().length > 0 ? filteredJobs().length + ' jobs found' : '0 jobs found' }}</p>
       </div>
 
       <div class="job-list">
@@ -75,12 +110,12 @@
           }
         }
 
-        @if (!loading() && jobs().length === 0) {
+        @if (!loading() && filteredJobs().length === 0) {
           <p class="empty">No jobs available</p>
         }
 
-        @if (!loading() && jobs().length > 0) {
-          @for (job of jobs(); track job.id) {
+        @if (!loading() && filteredJobs().length > 0) {
+          @for (job of filteredJobs(); track job.id) {
             <app-job-card [job]="job"></app-job-card>
           }
         }

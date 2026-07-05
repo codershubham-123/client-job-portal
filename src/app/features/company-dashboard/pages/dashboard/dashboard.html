@@ -1,0 +1,106 @@
+<div class="dashboard-shell">
+  <aside class="dashboard-sidebar">
+    <div class="brand-mark">TQ</div>
+    <nav>
+      <a class="active" routerLink="/company/dashboard">Dashboard</a>
+      <a routerLink="/jobs/all">My Jobs</a>
+      <button type="button" (click)="toggleForm()">Add Job</button>
+      <a routerLink="/reviews">Reviews</a>
+      <a routerLink="/companies">Company Profile</a>
+    </nav>
+  </aside>
+
+  <main class="dashboard-main">
+    <header class="dashboard-header">
+      <div>
+        <p>Company Dashboard</p>
+        <h1>Welcome back{{ company() ? ', ' + company()!.name : '' }}! 👋</h1>
+        <span>Manage jobs, reviews, and company performance from live backend data.</span>
+      </div>
+      @if (user()?.role === 'COMPANY') {
+        <button type="button" (click)="toggleForm()">+ Add New Job</button>
+      }
+    </header>
+
+    @if (formMessage()) {
+      <div class="form-message">{{ formMessage() }}</div>
+    }
+
+    @if (formVisible() && user()?.role === 'COMPANY') {
+      <section class="dashboard-card post-job-card">
+        <div class="card-heading">
+          <h2>Post a Job</h2>
+          <button type="button" (click)="toggleForm()">Close</button>
+        </div>
+        <form class="post-job-form" (submit)="$event.preventDefault(); createJob()">
+          <label>Job Title<input required [ngModel]="jobForm().title" name="title" (ngModelChange)="updateForm('title', $event)" /></label>
+          <label>Company Id<input type="number" [ngModel]="jobForm().companyId" name="companyId" (ngModelChange)="updateForm('companyId', $event ? +$event : null)" /></label>
+          <label>Location<input required [ngModel]="jobForm().location" name="location" (ngModelChange)="updateForm('location', $event)" /></label>
+          <label>Job Type<select [ngModel]="jobForm().jobType" name="jobType" (ngModelChange)="updateForm('jobType', $event)"><option>Remote</option><option>Hybrid</option><option>Onsite</option></select></label>
+          <label>Employment Type<select [ngModel]="jobForm().employmentType" name="employmentType" (ngModelChange)="updateForm('employmentType', $event)"><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Internship</option></select></label>
+          <label>Min Experience<input type="number" [ngModel]="jobForm().minExperience" name="minExperience" (ngModelChange)="updateForm('minExperience', +$event)" /></label>
+          <label>Max Experience<input type="number" [ngModel]="jobForm().maxExperience" name="maxExperience" (ngModelChange)="updateForm('maxExperience', +$event)" /></label>
+          <label>Salary Display<input required placeholder="₹50,000 - ₹90,000" [ngModel]="jobForm().salary" name="salary" (ngModelChange)="updateForm('salary', $event)" /></label>
+          <label class="wide">Skills<input placeholder="Angular, Java, SQL" [ngModel]="jobForm().skills" name="skills" (ngModelChange)="updateForm('skills', $event)" /></label>
+          <label class="wide">Description<textarea required [ngModel]="jobForm().description" name="description" (ngModelChange)="updateForm('description', $event)"></textarea></label>
+          <button class="submit-job" type="submit" [disabled]="saving()">{{ saving() ? 'Posting...' : 'Create Job' }}</button>
+        </form>
+      </section>
+    }
+
+    <section class="stats-grid">
+      <article><span>▣</span><p>Total Jobs</p><strong>{{ jobs().length }}</strong></article>
+      <article><span>☑</span><p>Active Jobs</p><strong>{{ activeJobs() }}</strong></article>
+      <article><span>☆</span><p>Total Reviews</p><strong>{{ reviews().length }}</strong></article>
+      <article><span>↗</span><p>Average Rating</p><strong>{{ averageRating() | number: '1.1-1' }}</strong></article>
+      <article><span>♚</span><p>Open Positions</p><strong>{{ openPositions() }}</strong></article>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="dashboard-card jobs-table">
+        <div class="card-heading"><h2>Recent Jobs</h2><a routerLink="/jobs/all">View All Jobs →</a></div>
+        <table>
+          <thead><tr><th>Job Title</th><th>Location</th><th>Job Type</th><th>Experience</th><th>Salary</th></tr></thead>
+          <tbody>
+            @for (job of recentJobs(); track job.id) {
+              <tr><td>{{ job.title }}</td><td>{{ job.location }}</td><td><span>{{ job.employmentType }}</span></td><td>{{ experience(job) }}</td><td>{{ salary(job) }}</td></tr>
+            }
+          </tbody>
+        </table>
+      </article>
+
+      <aside class="dashboard-card company-overview">
+        @if (company(); as selectedCompany) {
+          <div class="company-logo">{{ selectedCompany.initial }}</div>
+          <h2>{{ selectedCompany.name }}</h2>
+          <p>{{ selectedCompany.industry }} • {{ selectedCompany.location }}</p>
+          <div>
+            <strong>{{ selectedCompany.rating }} ★</strong>
+            <strong>{{ selectedCompany.reviewCount }} Reviews</strong>
+            <strong>{{ selectedCompany.openJobCount }} Jobs</strong>
+          </div>
+        } @else {
+          <div class="company-logo">C</div>
+          <h2>Company Profile</h2>
+          <p>Industry • Location</p>
+          <div><strong>0 ★</strong><strong>0 Reviews</strong><strong>0 Jobs</strong></div>
+        }
+        <a routerLink="/companies">View Company Profile</a>
+      </aside>
+
+      <article class="dashboard-card reviews-card">
+        <div class="card-heading"><h2>Recent Reviews</h2><a routerLink="/reviews">View All Reviews →</a></div>
+        @for (review of recentReviews(); track review.id) {
+          <div class="review-row"><strong>{{ review.title }}</strong><span>⭐ {{ review.rating }}</span><p>{{ review.description }}</p></div>
+        }
+      </article>
+
+      <article class="dashboard-card skills-card">
+        <h2>Top Skills in Demand</h2>
+        @for (skill of topSkills(); track skill.name) {
+          <div class="skill-row"><span>{{ skill.name }}</span><small>{{ skill.count }} jobs</small><div><i [style.width.%]="skill.count * 20"></i></div></div>
+        }
+      </article>
+    </section>
+  </main>
+</div>

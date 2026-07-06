@@ -323,3 +323,94 @@
     padding: 8px 14px;
   }
 }
+
+.pill-row {
+  button {
+    border: 0;
+    background: #edf1f7;
+    border-radius: 999px;
+    padding: 8px 16px;
+    cursor: pointer;
+    color: #0c1d3e;
+
+    &.active {
+      background: #0d857f;
+      color: #fff;
+    }
+
+    small {
+      margin-left: 6px;
+      opacity: 0.75;
+    }
+  }
+}
+
+.filter-list {
+  display: grid;
+  gap: 10px;
+
+  label {
+    display: grid;
+    grid-template-columns: 18px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    color: #4c5f7b;
+    cursor: pointer;
+  }
+
+  input {
+    width: 16px;
+    height: 16px;
+    accent-color: #0d857f;
+  }
+
+  small {
+    color: #6f7f95;
+  }
+}
+
+@media (max-width: 520px) {
+  .jobs-page {
+    padding: 12px;
+  }
+
+  .hero {
+    padding: 24px 16px;
+    border-radius: 18px;
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  .search-form {
+    border-radius: 16px;
+
+    input,
+    button {
+      height: 52px;
+      font-size: 15px;
+    }
+  }
+
+  .filters-panel,
+  .company-card,
+  .job-skeleton {
+    border-radius: 18px;
+    padding: 18px;
+  }
+
+  .company-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+}

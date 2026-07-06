@@ -592,3 +592,41 @@
     align-items: center;
   }
 }
+
+@media (max-width: 520px) {
+  .jobs-hero {
+    gap: 18px;
+    border-radius: 18px;
+
+    h1 {
+      font-size: 22px;
+    }
+  }
+
+  .filters-card,
+  .results-card,
+  .details-card {
+    border-radius: 16px;
+  }
+
+  .filters-card,
+  .details-card {
+    padding: 18px;
+  }
+
+  .results-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .job-row {
+    padding: 18px 12px;
+  }
+
+  .company-logo {
+    width: 56px;
+    height: 56px;
+    font-size: 22px;
+  }
+}

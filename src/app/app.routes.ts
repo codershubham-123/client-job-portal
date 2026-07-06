@@ -23,6 +23,21 @@ export const routes: Routes = [
     loadComponent: () => import('./features/jobs/pages/all-jobs/all-jobs').then((m) => m.AllJobs),
   },
   {
+    path: 'companies',
+    loadComponent: () => import('./features/companies/pages/companies/companies').then((m) => m.Companies),
+  },
+  {
+    path: 'reviews',
+    loadComponent: () => import('./features/reviews/pages/reviews/reviews').then((m) => m.Reviews),
+  },
+  {
+    path: 'company/dashboard',
+    loadComponent: () =>
+      import('./features/company-dashboard/pages/dashboard/dashboard').then(
+        (m) => m.CompanyDashboard,
+      ),
+  },
+  {
     path: '**',
     redirectTo: 'login',
   },

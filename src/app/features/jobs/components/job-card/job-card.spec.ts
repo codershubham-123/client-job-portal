@@ -2,14 +2,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { JobCard } from './job-card';
 
-const mockJob = {
+const testJob = {
   id: 1,
   title: 'Full Stack Developer',
   description: 'Work on both frontend and backend.',
-  minSalary: '60000',
-  maxSalary: '150000',
   location: 'Remote',
+  jobType: 'Remote',
+  employmentType: 'Full-time',
+  minExperience: 3,
+  maxExperience: 5,
+  postedAt: 'Today',
+  skills: ['Angular'],
   company: null,
+  salary: '₹60,000 - ₹150,000',
+  isNew: true,
 };
 
 describe('JobCard', () => {
@@ -23,7 +29,7 @@ describe('JobCard', () => {
 
     fixture = TestBed.createComponent(JobCard);
     component = fixture.componentInstance;
-    component.job = mockJob;
+    component.job = testJob;
     await fixture.whenStable();
   });
 

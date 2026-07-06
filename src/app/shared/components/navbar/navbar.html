@@ -17,7 +17,7 @@
     <div class="actions">
       @if (!isLoggedIn()) {
         <button mat-stroked-button class="login-btn" routerLink="/login">Login</button>
-        <button mat-flat-button class="primary-btn" routerLink="/register">Post Job</button>
+        <button mat-flat-button class="primary-btn" routerLink="/register">Sign up</button>
       }
 
       @if (isLoggedIn() && user()?.role === 'USER') {
@@ -29,6 +29,7 @@
         <button mat-stroked-button class="login-btn" routerLink="/company/dashboard">
           Dashboard
         </button>
+        <button mat-flat-button class="primary-btn" routerLink="/company/dashboard">Post Job</button>
         <button mat-flat-button class="primary-btn" (click)="logout()">Logout</button>
       }
     </div>

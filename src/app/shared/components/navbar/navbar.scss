@@ -72,3 +72,66 @@
   color: #ffffff;
   box-shadow: 0 6px 14px rgba(7, 126, 112, 0.25);
 }
+
+@media (max-width: 900px) {
+  .navbar {
+    height: auto;
+    min-height: 72px;
+    padding: 14px 18px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .logo {
+    font-size: 28px;
+  }
+
+  .main-links {
+    order: 3;
+    width: 100%;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+
+    a {
+      white-space: nowrap;
+      padding: 8px 4px;
+    }
+  }
+
+  .actions {
+    margin-left: auto;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .login-btn,
+  .primary-btn {
+    min-width: auto;
+    height: 42px;
+    padding: 0 14px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 520px) {
+  .navbar {
+    padding: 12px;
+  }
+
+  .logo {
+    font-size: 24px;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .login-btn,
+  .primary-btn {
+    flex: 1 1 auto;
+  }
+}

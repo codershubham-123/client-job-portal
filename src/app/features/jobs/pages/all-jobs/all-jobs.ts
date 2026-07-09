@@ -4,8 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { JobsApi } from '@core/jobs-api';
 import { Job } from '@features/jobs/models/job.model';
+import { companyInitial, experienceDisplay, salaryDisplay } from '@features/jobs/utils/display';
 
 type JobTypeFilter = 'Remote' | 'Hybrid' | 'Onsite';
+type ExperienceFilter = 'Fresher' | '1-3 Years' | '3-5 Years' | '5-8 Years' | '8+ Years';
+type SalaryFilter = '₹5L - ₹10L' | '₹10L - ₹20L' | '₹20L - ₹30L' | '₹30L - ₹50L' | '₹50L+';
 
 interface FilterItem {
   label: string;
@@ -27,7 +30,9 @@ export class AllJobs implements OnInit {
   selectedJob = signal<Job | null>(null);
   searchTerm = signal('');
   sortBy = signal('newest');
-  selectedTypes = signal<Set<JobTypeFilter>>(new Set(['Remote']));
+  selectedTypes = signal<Set<JobTypeFilter>>(new Set());
+  selectedExperiences = signal<Set<ExperienceFilter>>(new Set());
+  selectedSalary = signal<SalaryFilter | ''>('');
   quickFilters = ['Remote', 'Frontend', 'React', 'Java', 'AI/ML', 'Startup'];
 
   jobTypeFilters = computed<FilterItem[]>(() => {
@@ -40,14 +45,40 @@ export class AllJobs implements OnInit {
         count: this.countByLocation(jobs, 'Remote'),
         selected: selected.has('Remote'),
       },
-      { label: 'Hybrid', count: 76, selected: selected.has('Hybrid') },
+      { label: 'Hybrid', count: this.countByType(jobs, 'Hybrid'), selected: selected.has('Hybrid') },
       { label: 'Onsite', count: this.countOnsite(jobs), selected: selected.has('Onsite') },
     ];
+  });
+
+  experienceFilters = computed<FilterItem[]>(() => {
+    const jobs = this.jobs();
+    const selected = this.selectedExperiences();
+    const filters: ExperienceFilter[] = ['Fresher', '1-3 Years', '3-5 Years', '5-8 Years', '8+ Years'];
+
+    return filters.map((label) => ({
+      label,
+      count: jobs.filter((job) => this.matchesExperience(job, label)).length,
+      selected: selected.has(label),
+    }));
+  });
+
+  salaryFilters = computed<FilterItem[]>(() => {
+    const jobs = this.jobs();
+    const selected = this.selectedSalary();
+    const filters: SalaryFilter[] = ['₹5L - ₹10L', '₹10L - ₹20L', '₹20L - ₹30L', '₹30L - ₹50L', '₹50L+'];
+
+    return filters.map((label) => ({
+      label,
+      count: jobs.filter((job) => this.matchesSalary(job, label)).length,
+      selected: selected === label,
+    }));
   });
 
   visibleJobs = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
     const types = this.selectedTypes();
+    const experiences = this.selectedExperiences();
+    const salary = this.selectedSalary();
     const sortedJobs = [...this.jobs()].sort((first, second) => {
       if (this.sortBy() === 'oldest') {
         return first.id - second.id;
@@ -67,6 +98,14 @@ export class AllJobs implements OnInit {
         location.includes(term);
 
       if (!matchesTerm) {
+        return false;
+      }
+
+      if (experiences.size > 0 && !Array.from(experiences).some((filter) => this.matchesExperience(job, filter))) {
+        return false;
+      }
+
+      if (salary && !this.matchesSalary(job, salary)) {
         return false;
       }
 
@@ -99,8 +138,8 @@ export class AllJobs implements OnInit {
 
   loadJobs(): void {
     this.jobApi.getJobs().subscribe({
-      next: (res : any) => {
-        this.jobs.set(res.data);
+      next: (res) => {
+        this.jobs.set(res);
         this.selectedJob.set(res[0] ?? null);
         this.loading.set(false);
       },
@@ -136,8 +175,28 @@ export class AllJobs implements OnInit {
     this.selectedTypes.set(nextTypes);
   }
 
+  toggleExperience(label: string): void {
+    const experience = label as ExperienceFilter;
+    const nextExperiences = new Set(this.selectedExperiences());
+
+    if (nextExperiences.has(experience)) {
+      nextExperiences.delete(experience);
+    } else {
+      nextExperiences.add(experience);
+    }
+
+    this.selectedExperiences.set(nextExperiences);
+  }
+
+  updateSalary(label: string): void {
+    const salary = label as SalaryFilter;
+    this.selectedSalary.set(this.selectedSalary() === salary ? '' : salary);
+  }
+
   clearFilters(): void {
     this.selectedTypes.set(new Set());
+    this.selectedExperiences.set(new Set());
+    this.selectedSalary.set('');
     this.searchTerm.set('');
   }
 
@@ -154,61 +213,93 @@ export class AllJobs implements OnInit {
   }
 
   getCompanyInitial(job: Job): string {
-    return this.getCompanyName(job).charAt(0).toUpperCase();
+    return companyInitial(job.company);
   }
 
   getJobLocation(job: Job): string {
-    return job.location ?? 'Location not specified';
+    return job.location;
   }
 
   getSalary(job: Job): string {
-    return `₹${job.minSalary} - ₹${job.maxSalary}`;
+    return salaryDisplay(job);
   }
 
   getExperience(job: Job): string {
-    const title = job.title.toLowerCase();
-
-    if (title.includes('senior') || job.id <= 2) {
-      return '5+ Years';
-    }
-
-    if (title.includes('frontend')) {
-      return '2-4 Years';
-    }
-
-    return '3-5 Years';
+    return experienceDisplay(job);
   }
 
   getSkills(job: Job): string[] {
-    const text = `${job.title} ${job.description}`.toLowerCase();
-
-    if (text.includes('frontend') || text.includes('react')) {
-      return ['React', 'TypeScript', 'Next.js', 'Tailwind CSS'];
-    }
-
-    if (text.includes('java') || text.includes('backend') || text.includes('spring')) {
-      return ['Java', 'Spring Boot', 'AWS', 'MySQL'];
-    }
-
-    if (text.includes('cloud') || text.includes('azure')) {
-      return ['Azure', 'Kubernetes', 'CI/CD', 'Terraform'];
-    }
-
-    if (text.includes('devops')) {
-      return ['Docker', 'Jenkins', 'CI/CD', 'Automation'];
-    }
-
-    return ['Python', 'Django', 'PostgreSQL', 'Docker'];
+    return job.skills ?? [];
   }
 
   getPostedLabel(job: Job): string {
-    return `${Math.max(1, job.id % 5)} day${job.id % 5 === 1 ? '' : 's'} ago`;
+    return job.postedAt;
+  }
+
+
+  private matchesExperience(job: Job, filter: ExperienceFilter): boolean {
+    const min = job.minExperience ?? 0;
+    const max = job.maxExperience ?? min;
+
+    switch (filter) {
+      case 'Fresher':
+        return min === 0;
+      case '1-3 Years':
+        return min <= 3 && max >= 1;
+      case '3-5 Years':
+        return min <= 5 && max >= 3;
+      case '5-8 Years':
+        return min <= 8 && max >= 5;
+      case '8+ Years':
+        return max >= 8 || min >= 8;
+    }
+  }
+
+  private matchesSalary(job: Job, filter: SalaryFilter): boolean {
+    const amount = this.salaryAmount(job);
+
+    if (amount === null) {
+      return false;
+    }
+
+    switch (filter) {
+      case '₹5L - ₹10L':
+        return amount >= 500000 && amount <= 1000000;
+      case '₹10L - ₹20L':
+        return amount >= 1000000 && amount <= 2000000;
+      case '₹20L - ₹30L':
+        return amount >= 2000000 && amount <= 3000000;
+      case '₹30L - ₹50L':
+        return amount >= 3000000 && amount <= 5000000;
+      case '₹50L+':
+        return amount >= 5000000;
+    }
+  }
+
+  private salaryAmount(job: Job): number | null {
+    if (!job.salary) {
+      return null;
+    }
+
+    if (typeof job.salary === 'object') {
+      return job.salary.max ?? job.salary.min ?? null;
+    }
+
+    const amounts = Array.from(job.salary.matchAll(/[\d,]+/g))
+      .map(([value]) => Number(value.replace(/,/g, '')))
+      .filter((value) => !Number.isNaN(value));
+
+    return amounts.length ? Math.max(...amounts) : null;
   }
 
   private countByLocation(jobs: Job[], locationName: string): number {
     return jobs.filter((job) =>
       this.getJobLocation(job).toLowerCase().includes(locationName.toLowerCase()),
     ).length;
+  }
+
+  private countByType(jobs: Job[], type: string): number {
+    return jobs.filter((job) => job.jobType?.toLowerCase() === type.toLowerCase()).length;
   }
 
   private countOnsite(jobs: Job[]): number {

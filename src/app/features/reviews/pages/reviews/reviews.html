@@ -1,0 +1,24 @@
+<div class="reviews-page">
+  <section class="reviews-hero"><div><p>Reviews</p><h1>Real company reviews</h1><span>{{ reviews().length }} backend reviews</span></div><label><span>⌕</span><input type="search" [ngModel]="searchTerm()" (ngModelChange)="updateSearch($event)" placeholder="Search reviews" /></label></section>
+  <div class="reviews-layout">
+    <main class="reviews-list">
+      @if (loading()) { <p class="state">Loading reviews...</p> }
+      @if (error()) { <p class="state error">{{ error() }}</p> }
+      @if (!loading() && filteredReviews().length === 0) { <p class="state">No reviews found.</p> }
+      @for (review of filteredReviews(); track review.id) {
+        <article class="review-card" [class.active]="selectedReview()?.id === review.id" (click)="selectReview(review)" tabindex="0" (keydown.enter)="selectReview(review)">
+          <div class="review-head"><div class="logo">{{ review.company?.initial || '?' }}</div><div><h2>{{ review.title }}</h2><p>{{ review.company?.name || 'Company' }} • {{ review.reviewerRole }}</p></div><strong>⭐ {{ review.rating }}</strong></div>
+          <p>{{ review.description }}</p><div class="review-meta"><span>{{ review.employmentStatus }}</span><span>{{ review.createdAt }}</span></div>
+        </article>
+      }
+    </main>
+    <aside class="detail-sidebar">
+      @if (selectedReview(); as review) {
+        <div class="detail-head"><div class="logo large">{{ review.company?.initial || '?' }}</div><div><h2>{{ review.company?.name || 'Company' }}</h2><p>⭐ {{ review.rating }} • {{ review.createdAt }}</p></div></div>
+        <section><h3>{{ review.title }}</h3><p>{{ review.description }}</p></section>
+        <div class="pros-cons"><div><h3>Pros</h3><p>{{ review.pros }}</p></div><div><h3>Cons</h3><p>{{ review.cons }}</p></div></div>
+        <div class="detail-grid"><div><span>Reviewer Role</span><strong>{{ review.reviewerRole }}</strong></div><div><span>Employment Status</span><strong>{{ review.employmentStatus }}</strong></div></div>
+      } @else { <p class="state">Select a review to view details.</p> }
+    </aside>
+  </div>
+</div>

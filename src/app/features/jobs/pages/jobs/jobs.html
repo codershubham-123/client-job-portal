@@ -27,11 +27,7 @@
         <h4>Job Type</h4>
         <div class="pill-row">
           @for (type of jobTypeFilters; track type) {
-            <button
-              type="button"
-              [class.active]="isTypeSelected(type)"
-              (click)="toggleType(type)"
-            >
+            <button type="button" [class.active]="isTypeSelected(type)" (click)="toggleType(type)">
               {{ type }}
               <small>{{ countByType(type) }}</small>
             </button>
@@ -93,7 +89,9 @@
 
       <div class="section-header jobs-header">
         <h2>Featured Jobs</h2>
-        <p>{{ filteredJobs().length > 0 ? filteredJobs().length + ' jobs found' : '0 jobs found' }}</p>
+        <p>
+          {{ filteredJobs().length > 0 ? filteredJobs().length + ' jobs found' : '0 jobs found' }}
+        </p>
       </div>
 
       <div class="job-list">
@@ -116,7 +114,13 @@
 
         @if (!loading() && filteredJobs().length > 0) {
           @for (job of filteredJobs(); track job.id) {
-            <app-job-card [job]="job"></app-job-card>
+            <app-job-card
+              [job]="job"
+              [showSave]="isSaveAvailable()"
+              [saved]="isSaved(job)"
+              [saving]="isSaving(job)"
+              (save)="toggleSaved(job)"
+            ></app-job-card>
           }
         }
       </div>

@@ -1,13 +1,42 @@
 <mat-card class="job-card">
   <div class="job-card-content">
-    <div class="company-mark">{{ initial(job.company) }}</div>
+    <div class="company-mark">{{ initial(job().company) }}</div>
     <div class="job-info">
-      <div class="title-row"><h3 class="job-title">{{ job.title }}</h3>@if (job.isNew) { <span class="featured-tag">New</span> }</div>
-      <div class="job-meta"><span>{{ job.company?.name ?? 'Confidential Company' }}</span><span>•</span><span>{{ job.location }}</span><span>•</span><span>{{ job.jobType }}</span></div>
-      <p class="job-description">{{ job.description }}</p>
-      <div class="skill-tags">@for (skill of job.skills; track skill) { <span>{{ skill }}</span> }</div>
-      <p class="job-salary">{{ salary(job) }} • {{ experience(job) }} • {{ job.employmentType }}</p>
+      <div class="title-row">
+        <h3 class="job-title">{{ job().title }}</h3>
+        @if (job().isNew) {
+          <span class="featured-tag">New</span>
+        }
+      </div>
+      <div class="job-meta">
+        <span>{{ job().company?.name ?? 'Confidential Company' }}</span
+        ><span>•</span><span>{{ job().location }}</span
+        ><span>•</span><span>{{ job().jobType }}</span>
+      </div>
+      <p class="job-description">{{ job().description }}</p>
+      <div class="skill-tags">
+        @for (skill of job().skills; track skill) {
+          <span>{{ skill }}</span>
+        }
+      </div>
+      <p class="job-salary">
+        {{ salary(job()) }} • {{ experience(job()) }} • {{ job().employmentType }}
+      </p>
     </div>
-    <div class="job-action"><small>{{ job.postedAt }}</small><button mat-flat-button color="primary">View Details</button></div>
+    <div class="job-action">
+      <small>{{ job().postedAt }}</small>
+      @if (showSave()) {
+        <button
+          mat-stroked-button
+          type="button"
+          class="save-job-button"
+          [disabled]="saving()"
+          (click)="save.emit()"
+        >
+          {{ saved() ? 'Saved' : 'Save' }}
+        </button>
+      }
+      <button mat-flat-button color="primary">View Details</button>
+    </div>
   </div>
 </mat-card>

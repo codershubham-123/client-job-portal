@@ -1,7 +1,8 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, Inject, OnInit, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { Auth } from '@core/auth';
 import { JobsApi } from '@core/jobs-api';
 import { Job } from '@features/jobs/models/job.model';
 import { companyInitial, experienceDisplay, salaryDisplay } from '@features/jobs/utils/display';
@@ -24,10 +25,14 @@ interface FilterItem {
 })
 export class AllJobs implements OnInit {
   private jobApi = inject(JobsApi);
+  private auth = inject(Auth);
+  private router = inject(Router);
 
   jobs = signal<Job[]>([]);
   loading = signal(true);
   selectedJob = signal<Job | null>(null);
+  savedJobIds = signal<Set<number>>(new Set());
+  savingJobIds = signal<Set<number>>(new Set());
   searchTerm = signal('');
   sortBy = signal('newest');
   selectedTypes = signal<Set<JobTypeFilter>>(new Set());
@@ -45,7 +50,11 @@ export class AllJobs implements OnInit {
         count: this.countByLocation(jobs, 'Remote'),
         selected: selected.has('Remote'),
       },
-      { label: 'Hybrid', count: this.countByType(jobs, 'Hybrid'), selected: selected.has('Hybrid') },
+      {
+        label: 'Hybrid',
+        count: this.countByType(jobs, 'Hybrid'),
+        selected: selected.has('Hybrid'),
+      },
       { label: 'Onsite', count: this.countOnsite(jobs), selected: selected.has('Onsite') },
     ];
   });
@@ -53,7 +62,13 @@ export class AllJobs implements OnInit {
   experienceFilters = computed<FilterItem[]>(() => {
     const jobs = this.jobs();
     const selected = this.selectedExperiences();
-    const filters: ExperienceFilter[] = ['Fresher', '1-3 Years', '3-5 Years', '5-8 Years', '8+ Years'];
+    const filters: ExperienceFilter[] = [
+      'Fresher',
+      '1-3 Years',
+      '3-5 Years',
+      '5-8 Years',
+      '8+ Years',
+    ];
 
     return filters.map((label) => ({
       label,
@@ -65,7 +80,13 @@ export class AllJobs implements OnInit {
   salaryFilters = computed<FilterItem[]>(() => {
     const jobs = this.jobs();
     const selected = this.selectedSalary();
-    const filters: SalaryFilter[] = ['₹5L - ₹10L', '₹10L - ₹20L', '₹20L - ₹30L', '₹30L - ₹50L', '₹50L+'];
+    const filters: SalaryFilter[] = [
+      '₹5L - ₹10L',
+      '₹10L - ₹20L',
+      '₹20L - ₹30L',
+      '₹30L - ₹50L',
+      '₹50L+',
+    ];
 
     return filters.map((label) => ({
       label,
@@ -101,7 +122,10 @@ export class AllJobs implements OnInit {
         return false;
       }
 
-      if (experiences.size > 0 && !Array.from(experiences).some((filter) => this.matchesExperience(job, filter))) {
+      if (
+        experiences.size > 0 &&
+        !Array.from(experiences).some((filter) => this.matchesExperience(job, filter))
+      ) {
         return false;
       }
 
@@ -130,6 +154,7 @@ export class AllJobs implements OnInit {
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.loadJobs();
+      this.loadSavedJobIds();
       return;
     }
 
@@ -152,6 +177,50 @@ export class AllJobs implements OnInit {
 
   selectJob(job: Job): void {
     this.selectedJob.set(job);
+  }
+
+  isSaveAvailable(): boolean {
+    return !this.auth.isLoggedIn() || this.auth.user()?.role === 'USER';
+  }
+
+  isSaved(job: Job): boolean {
+    return this.savedJobIds().has(job.id);
+  }
+
+  isSaving(job: Job): boolean {
+    return this.savingJobIds().has(job.id);
+  }
+
+  toggleSaved(job: Job, event?: Event): void {
+    event?.stopPropagation();
+
+    if (!this.auth.isLoggedIn()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (this.auth.user()?.role !== 'USER' || this.isSaving(job)) {
+      return;
+    }
+
+    this.setSaving(job.id, true);
+    const request = this.isSaved(job) ? this.jobApi.unsaveJob(job.id) : this.jobApi.saveJob(job.id);
+    request.subscribe({
+      next: ({ saved }) => {
+        const ids = new Set(this.savedJobIds());
+        if (saved) {
+          ids.add(job.id);
+        } else {
+          ids.delete(job.id);
+        }
+        this.savedJobIds.set(ids);
+        this.setSaving(job.id, false);
+      },
+      error: (error) => {
+        console.error('Failed to update saved job', error);
+        this.setSaving(job.id, false);
+      },
+    });
   }
 
   updateSearch(value: string): void {
@@ -236,6 +305,26 @@ export class AllJobs implements OnInit {
     return job.postedAt;
   }
 
+  private loadSavedJobIds(): void {
+    if (this.auth.user()?.role !== 'USER') {
+      return;
+    }
+
+    this.jobApi.getSavedJobIds().subscribe({
+      next: (ids) => this.savedJobIds.set(new Set(ids)),
+      error: (error) => console.error('Failed to load saved job IDs', error),
+    });
+  }
+
+  private setSaving(jobId: number, saving: boolean): void {
+    const ids = new Set(this.savingJobIds());
+    if (saving) {
+      ids.add(jobId);
+    } else {
+      ids.delete(jobId);
+    }
+    this.savingJobIds.set(ids);
+  }
 
   private matchesExperience(job: Job, filter: ExperienceFilter): boolean {
     const min = job.minExperience ?? 0;

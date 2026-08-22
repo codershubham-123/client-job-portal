@@ -1,0 +1,109 @@
+.saved-jobs-page {
+  min-height: calc(100vh - 72px);
+  padding: 36px max(24px, calc((100vw - 1040px) / 2));
+  background: #f2f5fa;
+  color: #0b1736;
+}
+
+.saved-jobs-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 26px;
+
+  .eyebrow {
+    margin: 0 0 8px;
+    color: #08736e;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  p:not(.eyebrow) {
+    margin: 8px 0 0;
+    color: #50627c;
+  }
+
+  a,
+  .empty-state a {
+    border-radius: 10px;
+    background: #087d73;
+    color: #fff;
+    padding: 12px 18px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+}
+
+.saved-count {
+  margin: 0 0 14px;
+  color: #50627c;
+  font-weight: 600;
+}
+
+.saved-jobs-list {
+  display: grid;
+  gap: 14px;
+}
+
+.saved-job-skeleton {
+  height: 190px;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 37%, #e5e7eb 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+.empty-state {
+  padding: 72px 24px;
+  border: 1px solid #dce2ec;
+  border-radius: 20px;
+  background: #fff;
+  text-align: center;
+
+  h2 {
+    margin: 0 0 10px;
+  }
+
+  p {
+    margin: 0 0 24px;
+    color: #50627c;
+  }
+
+  a {
+    display: inline-block;
+    border-radius: 10px;
+    background: #087d73;
+    color: #fff;
+    padding: 12px 18px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .saved-jobs-page {
+    padding: 24px 16px;
+  }
+
+  .saved-jobs-header {
+    align-items: start;
+    flex-direction: column;
+  }
+}

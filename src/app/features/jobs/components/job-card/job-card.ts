@@ -12,10 +12,12 @@ import { companyInitial, experienceDisplay, salaryDisplay } from '@features/jobs
   styleUrl: './job-card.scss',
 })
 export class JobCard {
+  // The same card is used on job listings and the saved-jobs page; callers opt into save controls.
   job = input.required<Job>();
   showSave = input(false);
   saved = input(false);
   saving = input(false);
+  // The parent owns the API call and supplies the optimistic saved state back to this card.
   save = output<void>();
 
   salary = salaryDisplay;

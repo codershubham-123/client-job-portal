@@ -37,6 +37,7 @@ export class Jobs implements OnInit {
   selectedSalaries = signal<Set<string>>(new Set());
   topCompanies = signal<Company[]>([]);
   loading = signal(true);
+  // Sets provide fast per-card lookups and immutable updates after save/unsave responses.
   savedJobIds = signal<Set<number>>(new Set());
   savingJobIds = signal<Set<number>>(new Set());
   quickFilters = ['Remote', 'Frontend', 'React', 'Java', 'AI/ML', 'Startup'];
@@ -121,6 +122,7 @@ export class Jobs implements OnInit {
   }
 
   isSaveAvailable(): boolean {
+    // Guests should see Save and are redirected when they select it; company users cannot save jobs.
     return !this.auth.isLoggedIn() || this.auth.user()?.role === 'USER';
   }
 
@@ -134,6 +136,7 @@ export class Jobs implements OnInit {
 
   toggleSaved(job: Job): void {
     if (!this.auth.isLoggedIn()) {
+      // Saving requires the bearer token provided after login.
       this.router.navigate(['/login']);
       return;
     }
@@ -142,6 +145,7 @@ export class Jobs implements OnInit {
       return;
     }
 
+    // Disable this card while its idempotent save/unsave request is in flight.
     this.setSaving(job.id, true);
     const request = this.isSaved(job) ? this.jobApi.unsaveJob(job.id) : this.jobApi.saveJob(job.id);
 
@@ -164,6 +168,7 @@ export class Jobs implements OnInit {
   }
 
   private loadSavedJobIds(): void {
+    // Do not call the protected endpoint unless this session belongs to a job seeker.
     if (this.auth.user()?.role !== 'USER') {
       return;
     }
@@ -175,6 +180,7 @@ export class Jobs implements OnInit {
   }
 
   private setSaving(jobId: number, saving: boolean): void {
+    // Create a new Set so Angular signals publish the loading-state update.
     const ids = new Set(this.savingJobIds());
     if (saving) {
       ids.add(jobId);

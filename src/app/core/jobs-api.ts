@@ -35,6 +35,7 @@ export class JobsApi {
   }
 
   getSavedJobs(): Observable<SavedJob[]> {
+    // The saved-jobs endpoint supplies complete job cards plus the date each job was saved.
     return this.http
       .get<SavedJob[] | ApiResponse<SavedJob[]>>(`${this.config.apiUrl}/saved-jobs`)
       .pipe(
@@ -45,12 +46,14 @@ export class JobsApi {
   }
 
   getSavedJobIds(): Observable<number[]> {
+    // List pages only need IDs to render their Save/Saved state without fetching full cards.
     return this.http
       .get<number[] | ApiResponse<number[]>>(`${this.config.apiUrl}/saved-jobs/ids`)
       .pipe(unwrapData<number[]>(), catchError(handleApiError('Load saved job IDs')));
   }
 
   saveJob(jobId: number): Observable<SavedJobStatus> {
+    // A null body preserves the backend contract: the job ID is supplied only in the path.
     return this.http
       .post<
         SavedJobStatus | ApiResponse<SavedJobStatus>
@@ -162,6 +165,7 @@ export class JobsApi {
 }
 
 type BackendJob = Partial<Job> & {
+  // The saved-jobs API can use these alternate field names from its response DTO.
   new?: boolean;
   minSalary?: number | string;
   maxSalary?: number | string;
@@ -169,6 +173,7 @@ type BackendJob = Partial<Job> & {
 };
 
 function normalizeJob(job: BackendJob): Job {
+  // Normalize all job endpoints at the API boundary so templates only use the Job shape.
   const minSalary = numberOrUndefined(job.minSalary);
   const maxSalary = numberOrUndefined(job.maxSalary);
   const salary =
@@ -187,6 +192,7 @@ function normalizeJob(job: BackendJob): Job {
 }
 
 function numberOrUndefined(value: number | string | undefined): number | undefined {
+  // Salary values may arrive as numeric strings; invalid values should not become NaN in the UI.
   if (value === undefined) {
     return undefined;
   }

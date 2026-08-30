@@ -31,6 +31,7 @@ export class AllJobs implements OnInit {
   jobs = signal<Job[]>([]);
   loading = signal(true);
   selectedJob = signal<Job | null>(null);
+  // Saved IDs drive the button label without increasing the payload of the jobs list endpoint.
   savedJobIds = signal<Set<number>>(new Set());
   savingJobIds = signal<Set<number>>(new Set());
   searchTerm = signal('');
@@ -180,6 +181,7 @@ export class AllJobs implements OnInit {
   }
 
   isSaveAvailable(): boolean {
+    // Keep Save visible to guests so the click can take them to login; company users do not save jobs.
     return !this.auth.isLoggedIn() || this.auth.user()?.role === 'USER';
   }
 
@@ -192,6 +194,7 @@ export class AllJobs implements OnInit {
   }
 
   toggleSaved(job: Job, event?: Event): void {
+    // The row itself selects a job, so prevent a Save click from changing the selected detail panel.
     event?.stopPropagation();
 
     if (!this.auth.isLoggedIn()) {
@@ -203,6 +206,7 @@ export class AllJobs implements OnInit {
       return;
     }
 
+    // Lock this button until the backend confirms the idempotent save-state change.
     this.setSaving(job.id, true);
     const request = this.isSaved(job) ? this.jobApi.unsaveJob(job.id) : this.jobApi.saveJob(job.id);
     request.subscribe({
@@ -306,6 +310,7 @@ export class AllJobs implements OnInit {
   }
 
   private loadSavedJobIds(): void {
+    // The IDs endpoint is authenticated and is applicable only to job-seeker accounts.
     if (this.auth.user()?.role !== 'USER') {
       return;
     }
@@ -317,6 +322,7 @@ export class AllJobs implements OnInit {
   }
 
   private setSaving(jobId: number, saving: boolean): void {
+    // Replace the Set rather than mutate it so the signal notifies the template.
     const ids = new Set(this.savingJobIds());
     if (saving) {
       ids.add(jobId);

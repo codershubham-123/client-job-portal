@@ -130,7 +130,9 @@
               <div class="job-summary">
                 <div class="job-heading">
                   <h2>{{ job.title }}</h2>
-                  @if (job.isNew) { <span>New</span> }
+                  @if (job.isNew) {
+                    <span>New</span>
+                  }
                 </div>
                 <p class="meta">
                   {{ getCompanyName(job) }} <span>•</span> {{ getJobLocation(job) }}
@@ -143,7 +145,16 @@
                 </div>
               </div>
               <div class="row-side">
-                <button type="button" aria-label="Save job">♡</button>
+                @if (isSaveAvailable()) {
+                  <button
+                    type="button"
+                    class="row-save-button"
+                    [disabled]="isSaving(job)"
+                    (click)="toggleSaved(job, $event)"
+                  >
+                    {{ isSaved(job) ? 'Saved' : 'Save' }}
+                  </button>
+                }
                 <small>{{ getPostedLabel(job) }}</small>
               </div>
             </article>
@@ -166,7 +177,16 @@
 
         <div class="detail-actions">
           <button class="apply-button" type="button">✈ Apply Now</button>
-          <button class="save-button" type="button">♧ Save Job</button>
+          @if (isSaveAvailable()) {
+            <button
+              class="save-button"
+              type="button"
+              [disabled]="isSaving(job)"
+              (click)="toggleSaved(job)"
+            >
+              {{ isSaved(job) ? 'Saved' : 'Save' }}
+            </button>
+          }
         </div>
 
         <section class="detail-section description-section">
@@ -188,7 +208,9 @@
           <div>
             <span>▣ Experience</span><strong>{{ getExperience(job) }}</strong>
           </div>
-          <div><span>▣ Employment Type</span><strong>{{ job.employmentType }}</strong></div>
+          <div>
+            <span>▣ Employment Type</span><strong>{{ job.employmentType }}</strong>
+          </div>
           <div>
             <span>⌖ Job Type</span><strong>{{ job.jobType }}</strong>
           </div>
@@ -201,7 +223,9 @@
           <h3>About {{ getCompanyName(job) }}</h3>
           <p>
             {{
-              job.company ? ('Rating ' + job.company.rating + ' • ' + job.company.reviewCount + ' reviews') : 'Company details unavailable'
+              job.company
+                ? 'Rating ' + job.company.rating + ' • ' + job.company.reviewCount + ' reviews'
+                : 'Company details unavailable'
             }}
           </p>
           <a routerLink="/companies">View Company Profile →</a>

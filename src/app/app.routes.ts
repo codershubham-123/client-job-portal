@@ -23,8 +23,14 @@ export const routes: Routes = [
     loadComponent: () => import('./features/jobs/pages/all-jobs/all-jobs').then((m) => m.AllJobs),
   },
   {
+    path: 'jobs/saved',
+    loadComponent: () =>
+      import('./features/jobs/pages/saved-jobs/saved-jobs').then((m) => m.SavedJobs),
+  },
+  {
     path: 'companies',
-    loadComponent: () => import('./features/companies/pages/companies/companies').then((m) => m.Companies),
+    loadComponent: () =>
+      import('./features/companies/pages/companies/companies').then((m) => m.Companies),
   },
   {
     path: 'reviews',

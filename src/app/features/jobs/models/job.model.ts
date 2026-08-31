@@ -1,8 +1,8 @@
 export interface ApiMeta {
-  page: number;
-  pageSize: number;
-  totalItems: number;
-  totalPages: number;
+  page?: number;
+  pageSize?: number;
+  totalItems?: number;
+  totalPages?: number;
 }
 
 export interface ApiResponse<T> {
@@ -48,6 +48,15 @@ export interface Job {
   isNew: boolean;
 }
 
+export interface SavedJob extends Job {
+  savedAt: string;
+}
+
+export interface SavedJobStatus {
+  jobId: number;
+  saved: boolean;
+}
+
 export interface ReviewCompanySummary {
   id: number;
   name: string;
@@ -72,6 +81,9 @@ export interface JobPayload extends Omit<Job, 'id' | 'company'> {
   companyId?: number | null;
 }
 
-export interface CompanyPayload extends Omit<Company, 'id' | 'rating' | 'reviewCount' | 'openJobCount'> {}
+export interface CompanyPayload extends Omit<
+  Company,
+  'id' | 'rating' | 'reviewCount' | 'openJobCount'
+> {}
 
 export interface ReviewPayload extends Omit<Review, 'id' | 'company' | 'createdAt'> {}

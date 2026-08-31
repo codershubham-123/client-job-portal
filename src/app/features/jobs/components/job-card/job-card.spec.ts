@@ -29,7 +29,7 @@ describe('JobCard', () => {
 
     fixture = TestBed.createComponent(JobCard);
     component = fixture.componentInstance;
-    component.job = testJob;
+    fixture.componentRef.setInput('job', testJob);
     await fixture.whenStable();
   });
 

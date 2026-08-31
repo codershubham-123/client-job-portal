@@ -1,12 +1,13 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, Inject, inject, OnInit, PLATFORM_ID, computed, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { JobsApi } from '@core/jobs-api';
+import { Auth } from '@core/auth';
 import { JobCard } from '@features/jobs/components/job-card/job-card';
 import { Company, Job } from '@features/jobs/models/job.model';
 
@@ -27,6 +28,8 @@ import { Company, Job } from '@features/jobs/models/job.model';
 })
 export class Jobs implements OnInit {
   private jobApi = inject(JobsApi);
+  private auth = inject(Auth);
+  private router = inject(Router);
 
   jobs = signal<Job[]>([]);
   selectedTypes = signal<Set<string>>(new Set());
@@ -34,14 +37,20 @@ export class Jobs implements OnInit {
   selectedSalaries = signal<Set<string>>(new Set());
   topCompanies = signal<Company[]>([]);
   loading = signal(true);
+  // Sets provide fast per-card lookups and immutable updates after save/unsave responses.
+  savedJobIds = signal<Set<number>>(new Set());
+  savingJobIds = signal<Set<number>>(new Set());
   quickFilters = ['Remote', 'Frontend', 'React', 'Java', 'AI/ML', 'Startup'];
   jobTypeFilters = ['Remote', 'Hybrid', 'Onsite'];
   experienceFilters = ['Fresher', '1-3 Years', '3-5 Years', '5-8 Years', '8+ Years'];
   salaryFilters = ['₹5L - ₹10L', '₹10L - ₹20L', '₹20L - ₹30L', '₹30L - ₹50L', '₹50L+'];
 
   filteredJobs = computed(() =>
-    this.jobs().filter((job) =>
-      this.matchesType(job) && this.matchesExperienceFilters(job) && this.matchesSalaryFilters(job),
+    this.jobs().filter(
+      (job) =>
+        this.matchesType(job) &&
+        this.matchesExperienceFilters(job) &&
+        this.matchesSalaryFilters(job),
     ),
   );
 
@@ -51,6 +60,7 @@ export class Jobs implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       this.loadJobs();
       this.loadCompanies();
+      this.loadSavedJobIds();
     }
   }
 
@@ -105,12 +115,85 @@ export class Jobs implements OnInit {
 
   loadCompanies(): void {
     this.jobApi.getCompanies().subscribe({
-      next: (companies) => this.topCompanies.set([...companies].sort((a, b) => b.rating - a.rating).slice(0, 3)),
+      next: (companies) =>
+        this.topCompanies.set([...companies].sort((a, b) => b.rating - a.rating).slice(0, 3)),
       error: (err) => console.error('Failed to load companies', err),
     });
   }
 
-  private toggleSet(target: { set(value: Set<string>): void; (): Set<string> }, value: string): void {
+  isSaveAvailable(): boolean {
+    // Guests should see Save and are redirected when they select it; company users cannot save jobs.
+    return !this.auth.isLoggedIn() || this.auth.user()?.role === 'USER';
+  }
+
+  isSaved(job: Job): boolean {
+    return this.savedJobIds().has(job.id);
+  }
+
+  isSaving(job: Job): boolean {
+    return this.savingJobIds().has(job.id);
+  }
+
+  toggleSaved(job: Job): void {
+    if (!this.auth.isLoggedIn()) {
+      // Saving requires the bearer token provided after login.
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (this.auth.user()?.role !== 'USER' || this.isSaving(job)) {
+      return;
+    }
+
+    // Disable this card while its idempotent save/unsave request is in flight.
+    this.setSaving(job.id, true);
+    const request = this.isSaved(job) ? this.jobApi.unsaveJob(job.id) : this.jobApi.saveJob(job.id);
+
+    request.subscribe({
+      next: ({ saved }) => {
+        const ids = new Set(this.savedJobIds());
+        if (saved) {
+          ids.add(job.id);
+        } else {
+          ids.delete(job.id);
+        }
+        this.savedJobIds.set(ids);
+        this.setSaving(job.id, false);
+      },
+      error: (error) => {
+        console.error('Failed to update saved job', error);
+        this.setSaving(job.id, false);
+      },
+    });
+  }
+
+  private loadSavedJobIds(): void {
+    // Do not call the protected endpoint unless this session belongs to a job seeker.
+    if (this.auth.user()?.role !== 'USER') {
+      return;
+    }
+
+    this.jobApi.getSavedJobIds().subscribe({
+      next: (ids) => this.savedJobIds.set(new Set(ids)),
+      error: (error) => console.error('Failed to load saved job IDs', error),
+    });
+  }
+
+  private setSaving(jobId: number, saving: boolean): void {
+    // Create a new Set so Angular signals publish the loading-state update.
+    const ids = new Set(this.savingJobIds());
+    if (saving) {
+      ids.add(jobId);
+    } else {
+      ids.delete(jobId);
+    }
+    this.savingJobIds.set(ids);
+  }
+
+  private toggleSet(
+    target: { set(value: Set<string>): void; (): Set<string> },
+    value: string,
+  ): void {
     const next = new Set(target());
 
     if (next.has(value)) {
@@ -129,12 +212,17 @@ export class Jobs implements OnInit {
 
   private matchesExperienceFilters(job: Job): boolean {
     const selected = this.selectedExperiences();
-    return selected.size === 0 || Array.from(selected).some((filter) => this.matchesExperience(job, filter));
+    return (
+      selected.size === 0 ||
+      Array.from(selected).some((filter) => this.matchesExperience(job, filter))
+    );
   }
 
   private matchesSalaryFilters(job: Job): boolean {
     const selected = this.selectedSalaries();
-    return selected.size === 0 || Array.from(selected).some((filter) => this.matchesSalary(job, filter));
+    return (
+      selected.size === 0 || Array.from(selected).some((filter) => this.matchesSalary(job, filter))
+    );
   }
 
   private normalizedTypeLabel(job: Job): string {
@@ -182,4 +270,3 @@ export class Jobs implements OnInit {
     return values.length ? Math.max(...values) : null;
   }
 }
-

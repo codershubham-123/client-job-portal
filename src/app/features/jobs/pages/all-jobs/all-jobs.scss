@@ -362,6 +362,17 @@
     cursor: pointer;
   }
 
+  .row-save-button {
+    min-width: 66px;
+    border: 1px solid #0c716d;
+    border-radius: 7px;
+    background: #fff;
+    color: #0a685f;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
   small {
     color: #43536d;
   }
